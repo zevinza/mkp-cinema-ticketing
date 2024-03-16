@@ -1,6 +1,8 @@
 
 # MKP Cinema Ticketing 
 
+## Armada Muhammad Siswanto
+
 This Project is created to make a RESTful API for Online Order Cinema Ticketing 
 written with go programming language and go-fiber framework.
 
