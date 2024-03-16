@@ -72,7 +72,7 @@ this diagram shows table relationship on database
 - Setelah `User` Mengonfirmasi `Cart`, `Transaction` akan dibuat berdasarkan data `Cart` dan `ShowSchedule`
 - `Ticket` dibuat berdasarkan data `Transaction` dan `Seat`
 - `Transaction.BookingCode` dan `Ticket.IsActivated` akan di set setelah `User` melakukan `TransactionPayment`
-- `ReferenceCount` tidak memiliki relasi, table ini digunakan untuk generate ReferenceCount pada beberapa entitas
+- `ReferenceCount` tidak memiliki relasi, table ini digunakan untuk generate `ReferenceNumber` pada beberapa entitas
 
 ## Problem, Solution, and Discussion
 1. Aplikasi ini dibuat secara sederhana, sehingga ada kemungkinan beberapa permasalahan yang dihadapi mampu diselesaikan dengan bantuan third-party
