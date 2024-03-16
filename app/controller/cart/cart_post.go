@@ -65,7 +65,7 @@ func PostCart(c *fiber.Ctx) error {
 	go InsertCart(api, userID, cartID, duration, db)
 	go db.Model(&model.Seat{}).Where(`id IN ?`, api.SeatIDs).UpdateColumn("is_available", "false")
 
-	rdb.Set(context.Background(), "cart_"+cartID.String(), userID.String(), duration)
+	rdb.Set(context.Background(), "cart_"+cartID.String(), "ok", duration)
 	rdb.Set(context.Background(), "cart_scheduler", "on", 0)
 	log.Println("----- seat scheduler : on -----")
 

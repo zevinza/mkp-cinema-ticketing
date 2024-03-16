@@ -58,29 +58,12 @@ definitions:
         type: integer
       seat_ids:
         type: string
+      seats:
+        items:
+          $ref: '#/definitions/model.Seat'
+        type: array
       show_schedule:
         $ref: '#/definitions/model.ShowSchedule'
-      show_schedule_id:
-        description: UserID
-        format: uuid
-        type: string
-      total_price:
-        type: number
-      user_id:
-        description: UserID
-        format: uuid
-        type: string
-    type: object
-  model.CartAPI:
-    properties:
-      expires_in:
-        type: integer
-      price:
-        type: number
-      quantity:
-        type: integer
-      seat_ids:
-        type: string
       show_schedule_id:
         description: UserID
         format: uuid
@@ -263,6 +246,8 @@ definitions:
       movie_id:
         type: string
       price:
+        type: number
+      seats:
         items:
           $ref: '#/definitions/model.Seat'
         type: array
@@ -341,6 +326,8 @@ definitions:
     type: object
   model.Transaction:
     properties:
+      Payment:
+        $ref: '#/definitions/model.TransactionPayment'
       additional:
         type: string
       booking_code:
@@ -358,8 +345,6 @@ definitions:
       total_discount:
         type: number
       total_fee:
-        type: number
-      total_paid:
         type: number
       total_price:
         type: number
@@ -829,54 +814,6 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Get a Cart by id
-      tags:
-      - Cart
-    put:
-      consumes:
-      - application/json
-      description: Update Cart by id
-      parameters:
-      - description: Cart ID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: Cart data
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/model.CartAPI'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Cart data
-          schema:
-            $ref: '#/definitions/model.Cart'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/lib.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/lib.Response'
-        "409":
-          description: Conflict
-          schema:
-            $ref: '#/definitions/lib.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/lib.Response'
-        default:
-          description: ""
-          schema:
-            $ref: '#/definitions/lib.Response'
-      security:
-      - ApiKeyAuth: []
-      summary: Update Cart by id
       tags:
       - Cart
   /info.json:

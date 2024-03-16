@@ -495,80 +495,6 @@
                     }
                 }
             },
-            "put": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Update Cart by id",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Cart"
-                ],
-                "summary": "Update Cart by id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Cart ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Cart data",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.CartAPI"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Cart data",
-                        "schema": {
-                            "$ref": "#/definitions/model.Cart"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/lib.Response"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/lib.Response"
-                        }
-                    },
-                    "409": {
-                        "description": "Conflict",
-                        "schema": {
-                            "$ref": "#/definitions/lib.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/lib.Response"
-                        }
-                    },
-                    "default": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/lib.Response"
-                        }
-                    }
-                }
-            },
             "delete": {
                 "security": [
                     {
@@ -1801,38 +1727,14 @@
                 "seat_ids": {
                     "type": "string"
                 },
+                "seats": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Seat"
+                    }
+                },
                 "show_schedule": {
                     "$ref": "#/definitions/model.ShowSchedule"
-                },
-                "show_schedule_id": {
-                    "description": "UserID",
-                    "type": "string",
-                    "format": "uuid"
-                },
-                "total_price": {
-                    "type": "number"
-                },
-                "user_id": {
-                    "description": "UserID",
-                    "type": "string",
-                    "format": "uuid"
-                }
-            }
-        },
-        "model.CartAPI": {
-            "type": "object",
-            "properties": {
-                "expires_in": {
-                    "type": "integer"
-                },
-                "price": {
-                    "type": "number"
-                },
-                "quantity": {
-                    "type": "integer"
-                },
-                "seat_ids": {
-                    "type": "string"
                 },
                 "show_schedule_id": {
                     "description": "UserID",
@@ -2099,6 +2001,9 @@
                     "type": "string"
                 },
                 "price": {
+                    "type": "number"
+                },
+                "seats": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/model.Seat"
@@ -2216,6 +2121,9 @@
         "model.Transaction": {
             "type": "object",
             "properties": {
+                "Payment": {
+                    "$ref": "#/definitions/model.TransactionPayment"
+                },
                 "additional": {
                     "type": "string"
                 },
@@ -2241,9 +2149,6 @@
                     "type": "number"
                 },
                 "total_fee": {
-                    "type": "number"
-                },
-                "total_paid": {
                     "type": "number"
                 },
                 "total_price": {

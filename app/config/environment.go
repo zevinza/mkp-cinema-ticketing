@@ -31,7 +31,7 @@ var Environment = map[string]interface{}{
 	"token_expire_in":  24,
 	"access_token":     "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFjNjdkYWFkLTVhODYtNDBlNi1hNzlhLTQ5ZGVhYWE2ZDg0YSIsImJ1c2luZXNzX2lkIjoiNmExYzEyZmQtNzEzNC00YTVhLTkwYmQtZGM1YzEyNmZkNThhIiwiYXVkIjoibXktY2xpZW50LWlkIiwiZXhwIjoxNjg2Njc3NzkyLCJzdWIiOiIxYzY3ZGFhZC01YTg2LTQwZTYtYTc5YS00OWRlYWFhNmQ4NGEifQ.-qbG3YQn6WsOvn5dEzIVCgUfA_wXmXjQcgWeBoK62KUyFtvyiOw5dAN9zWmZcnhBr0jMpME4nVVKlrP3gDvi0A",
 	"user_id":          "1c67daad-5a86-40e6-a79a-49deaaa6d84a",
-	"cart_duration":    100,
+	"cart_duration":    200,
 	"cart_ticker":      3,
 	"admin_fee":        4000,
 }

@@ -34,8 +34,8 @@ func GetTransactionID(c *fiber.Ctx) error {
 				ID: &id,
 			},
 		})).
-		Preload("Payments").
-		Preload("Details").
+		Preload("Payment").
+		Preload("Tickets").
 		Take(&data)
 	if result.RowsAffected < 1 {
 		return lib.ErrorNotFound(c)

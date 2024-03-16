@@ -95,6 +95,10 @@ func PostTransactionPayment(c *fiber.Ctx) error {
 	}
 
 	db.Updates(&trx)
+
+	tickets := []model.Ticket{}
+	db.Where(`transaction_id = ?`, id).Find(&tickets)
+	trx.Tickets = &tickets
 	data.Transaction = &trx
 
 	return lib.OK(c, data)

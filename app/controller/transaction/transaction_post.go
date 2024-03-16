@@ -5,6 +5,7 @@ import (
 	"api/app/model"
 	"api/app/services"
 	"context"
+	"log"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/viper"
@@ -29,11 +30,12 @@ import (
 func PostTransaction(c *fiber.Ctx) error {
 	db := services.DB.WithContext(c.UserContext())
 	rdb := services.REDIS
-	id := c.Params("id")
+	id := c.Params("cart_id")
 	trxID := lib.GenUUID()
 	userID := lib.GetXUserID(c)
 
-	if val, _ := rdb.Get(context.Background(), "cart_"+id).Result(); len(val) == 0 {
+	if val, err := rdb.Get(context.Background(), "cart_"+id).Result(); len(val) == 0 {
+		log.Println(val, err)
 		return lib.ErrorHTTP(c, 410, "your session is expired")
 	}
 
@@ -112,5 +114,5 @@ func PostTransaction(c *fiber.Ctx) error {
 		return lib.ErrorConflict(c, err)
 	}
 
-	return lib.OK(c)
+	return lib.OK(c, transaction)
 }

@@ -22,6 +22,9 @@ docker-compose up -d
 docker-compose exec go go run .
 ```
 note : this app contain seeder that you don't have to run sql script    
+see sql script at 
+(https://github.com/zevinza/mkp-cinema-ticketing/blob/ma/script.sql)
+
 4. Visit swagger documentation at 
 ```sh
 localhost:8080
@@ -67,8 +70,10 @@ this diagram shows table relationship on database
 - Setelah `User` Mengonfirmasi `Cart`, `Transaction` akan dibuat berdasarkan data `Cart` dan `ShowSchedule`
 - `Ticket` dibuat berdasarkan data `Transaction` dan `Seat`
 - `Transaction.BookingCode` dan `Ticket.IsActivated` akan di set setelah `User` melakukan `TransactionPayment`
+- `ReferenceCount` tidak memiliki relasi, table ini digunakan untuk generate ReferenceCount pada beberapa entitas
 
 ## Problem, Solution, and Discussion
 1. Aplikasi ini dibuat secara sederhana, sehingga ada kemungkinan beberapa permasalahan yang dihadapi mampu diselesaikan dengan bantuan third-party
 2. untuk mengakomodir pemesanan tiket agar tidak terjadi Race Condition, solusi yang digunakan pada sistem ini menggunakan cache redis yang memvalidasi agar user lain tidak dapat memilih Seat yang sudah dipilih oleh user sebelumnya, meskipun ada kemungkinan kursi akan dapat kembali dipilih apabila sesi telah berakhir
-3. Cache Redis dipilih karena merupakan No-SQL berbasis key-value yang disimpan di memori, sehingga mengurangi beban database dalam memvalidasi ketersediaan kursi
+3. Cache Redis dipilih karena merupakan NO-SQL berbasis key-value yang disimpan di memori, sehingga mengurangi beban database dalam memvalidasi ketersediaan kursi
+4. Implementasi Go-Routines pada beberapa fungsi yang berhubungan dengan koneksi ke database, agar pemrosesan data lebih cepat

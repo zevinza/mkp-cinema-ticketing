@@ -9,7 +9,8 @@ type Transaction struct {
 	Base
 	DataOwner
 	TransactionAPI
-	Tickets *[]Ticket `json:"tickets,omitempty" gorm:"foreignKey:TransactionID;references:ID"`
+	Tickets *[]Ticket           `json:"tickets,omitempty" gorm:"foreignKey:TransactionID;references:ID"`
+	Payment *TransactionPayment `json:"Payment,omitempty" gorm:"foreignKey:TransactionID;references:ID"`
 }
 
 type TransactionAPI struct {
