@@ -1,0 +1,17 @@
+/*
+*.*
+!*.go
+
+!/config/
+!/worker/
+!/utils/
+!/logger/
+!/controller/
+!/lib/
+!/middleware/
+!/migrations/
+!/model/
+!/routes/
+!/services/
+!/sync/
+!/.gitignore

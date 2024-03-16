@@ -1,0 +1,1568 @@
+basePath: /api/v1
+definitions:
+  lib.Page:
+    properties:
+      first:
+        description: indicate first value
+        example: true
+        type: boolean
+      items:
+        type: object
+      last:
+        description: indicate last value
+        example: false
+        type: boolean
+      max_page:
+        description: maximum pages for current schema
+        example: 9
+        type: integer
+      page:
+        description: current page, start from zero
+        example: 0
+        type: integer
+      size:
+        description: size per page, default `10`
+        example: 10
+        type: integer
+      total:
+        description: total data without filters
+        example: 100
+        type: integer
+      total_pages:
+        description: total pages
+        example: 10
+        type: integer
+      visible:
+        description: current length
+        example: 10
+        type: integer
+    type: object
+  lib.Response:
+    properties:
+      message:
+        description: response message
+        type: string
+      status:
+        description: http status
+        type: integer
+    type: object
+  model.Cart:
+    properties:
+      additional:
+        type: string
+      expires_in:
+        type: integer
+      price:
+        type: number
+      quantity:
+        type: integer
+      seat_ids:
+        type: string
+      seats:
+        items:
+          $ref: '#/definitions/model.Seat'
+        type: array
+      show_schedule:
+        $ref: '#/definitions/model.ShowSchedule'
+      show_schedule_id:
+        description: UserID
+        format: uuid
+        type: string
+      total_price:
+        type: number
+      user_id:
+        description: UserID
+        format: uuid
+        type: string
+    type: object
+  model.CartAPI:
+    properties:
+      expires_in:
+        type: integer
+      price:
+        type: number
+      quantity:
+        type: integer
+      seat_ids:
+        type: string
+      show_schedule_id:
+        description: UserID
+        format: uuid
+        type: string
+      total_price:
+        type: number
+      user_id:
+        description: UserID
+        format: uuid
+        type: string
+    type: object
+  model.CartPayload:
+    properties:
+      seatIDs:
+        items:
+          type: string
+        type: array
+      showScheduleID:
+        type: string
+    type: object
+  model.ChangePasswordAPI:
+    properties:
+      confirm_password:
+        example: '@Password123'
+        type: string
+      email:
+        example: armadamuhammads@gmail.com
+        type: string
+      password:
+        example: '@Password123'
+        minLength: 8
+        type: string
+    required:
+    - confirm_password
+    - email
+    - password
+    type: object
+  model.CinemaLocation:
+    properties:
+      additional:
+        type: string
+      address:
+        type: string
+      code:
+        type: string
+      name:
+        type: string
+    type: object
+  model.LoginAPI:
+    properties:
+      password:
+        example: password
+        type: string
+      remember:
+        example: true
+        type: boolean
+      username:
+        example: armadamuhammads@gmail.com
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  model.LoginResponse:
+    properties:
+      token:
+        $ref: '#/definitions/model.ResponseToken'
+      user:
+        $ref: '#/definitions/model.User'
+    type: object
+  model.Movie:
+    properties:
+      additional:
+        type: string
+      category:
+        type: string
+      code:
+        type: string
+      director:
+        type: string
+      duration:
+        type: number
+      name:
+        type: string
+      producer:
+        type: string
+    type: object
+  model.RegistrationAPI:
+    properties:
+      confirm_password:
+        example: '@Password123'
+        type: string
+      email:
+        example: armadamuhammads@gmail.com
+        type: string
+      first_name:
+        example: Armada
+        type: string
+      last_name:
+        example: Muhammad
+        type: string
+      password:
+        example: '@Password123'
+        minLength: 8
+        type: string
+      phone_number:
+        example: "089678009400"
+        type: string
+      username:
+        example: armadamuhammads
+        type: string
+    required:
+    - confirm_password
+    - email
+    - first_name
+    - password
+    type: object
+  model.ResponseToken:
+    properties:
+      access_token:
+        type: string
+      expires_in:
+        type: integer
+      is_admin:
+        type: boolean
+      token_type:
+        type: string
+    type: object
+  model.Seat:
+    properties:
+      additional:
+        type: string
+      characteristic:
+        type: string
+      code:
+        type: string
+      column:
+        type: string
+      is_available:
+        type: boolean
+      row:
+        type: string
+      seat_layout_id:
+        type: string
+      show_schedule_id:
+        type: string
+    type: object
+  model.ShowSchedule:
+    properties:
+      additional:
+        type: string
+      cinema_location:
+        $ref: '#/definitions/model.CinemaLocation'
+      cinema_location_id:
+        type: string
+      date:
+        format: date
+        type: string
+      is_start:
+        type: boolean
+      movie:
+        $ref: '#/definitions/model.Movie'
+      movie_id:
+        type: string
+      price:
+        type: number
+      start_time:
+        format: date-time
+        type: string
+      theater:
+        $ref: '#/definitions/model.Theater'
+      theater_id:
+        type: string
+    type: object
+  model.ShowScheduleAPI:
+    properties:
+      cinema_location_id:
+        type: string
+      date:
+        format: date
+        type: string
+      is_start:
+        type: boolean
+      movie_id:
+        type: string
+      price:
+        type: number
+      start_time:
+        format: date-time
+        type: string
+      theater_id:
+        type: string
+    type: object
+  model.Theater:
+    properties:
+      additional:
+        type: string
+      cinema_location_id:
+        type: string
+      code:
+        type: string
+      name:
+        type: string
+    type: object
+  model.Ticket:
+    properties:
+      additional:
+        type: string
+      date:
+        format: date
+        type: string
+      is_activated:
+        type: boolean
+      is_printed:
+        type: boolean
+      location_name:
+        type: string
+      movie_name:
+        type: string
+      price:
+        type: number
+      reference_number:
+        type: string
+      seat_code:
+        type: string
+      show_schedule_id:
+        type: string
+      start_time:
+        format: date-time
+        type: string
+      theater_name:
+        type: string
+      transaction_id:
+        type: string
+    type: object
+  model.Transaction:
+    properties:
+      additional:
+        type: string
+      booking_code:
+        type: string
+      contact_detail:
+        type: string
+      contact_name:
+        type: string
+      invoice_no:
+        type: string
+      tickets:
+        items:
+          $ref: '#/definitions/model.Ticket'
+        type: array
+      total_discount:
+        type: number
+      total_fee:
+        type: number
+      total_paid:
+        type: number
+      total_price:
+        type: number
+      total_ticket_price:
+        type: number
+      transaction_status:
+        type: string
+      user_id:
+        format: uuid
+        type: string
+    type: object
+  model.TransactionPayment:
+    properties:
+      additional:
+        type: string
+      notes:
+        type: string
+      paid_amount:
+        type: number
+      paid_at:
+        format: date-time
+        type: string
+      reference_no:
+        type: string
+      transaction:
+        $ref: '#/definitions/model.Transaction'
+      transaction_id:
+        format: uuid
+        type: string
+      type:
+        type: string
+      via:
+        type: string
+    type: object
+  model.TransactionPaymentAPI:
+    properties:
+      notes:
+        type: string
+      paid_amount:
+        type: number
+      paid_at:
+        format: date-time
+        type: string
+      reference_no:
+        type: string
+      transaction_id:
+        format: uuid
+        type: string
+      type:
+        type: string
+      via:
+        type: string
+    type: object
+  model.User:
+    properties:
+      additional:
+        type: string
+      email:
+        description: Email
+        example: armadamuhammads@gmail.com
+        type: string
+      first_name:
+        description: FirstName
+        example: Armada
+        type: string
+      is_admin:
+        description: IsAdmin
+        type: boolean
+      last_login:
+        description: LastLogin
+        format: date-time
+        type: string
+      last_name:
+        description: LastName
+        example: Muhammad Siswanto
+        type: string
+      phone_number:
+        description: PhoneNumber
+        example: "089678009400"
+        type: string
+      username:
+        description: Username
+        type: string
+    type: object
+  model.UserAPI:
+    properties:
+      email:
+        description: Email
+        example: armadamuhammads@gmail.com
+        type: string
+      first_name:
+        description: FirstName
+        example: Armada
+        type: string
+      is_admin:
+        description: IsAdmin
+        type: boolean
+      last_login:
+        description: LastLogin
+        format: date-time
+        type: string
+      last_name:
+        description: LastName
+        example: Muhammad Siswanto
+        type: string
+      phone_number:
+        description: PhoneNumber
+        example: "089678009400"
+        type: string
+      username:
+        description: Username
+        type: string
+    type: object
+host: localhost:8000
+info:
+  contact:
+    email: armadamuhammads@gmail.com
+    name: Armada Muhammad Siswanto
+  description: API Documentation
+  title: MKP Cinema Ticketing
+  version: 1.0.0
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: show basic response
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "400":
+          description: bad request
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "404":
+          description: not found
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "409":
+          description: conflict
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/lib.Response'
+      summary: show basic response
+      tags:
+      - API
+  /accounts/change-password:
+    post:
+      consumes:
+      - application/json
+      description: Change password
+      parameters:
+      - description: Account data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.ChangePasswordAPI'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/lib.Response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/lib.Response'
+      security:
+      - TokenKey: []
+      summary: Change password
+      tags:
+      - Account
+  /accounts/login:
+    post:
+      consumes:
+      - application/json
+      description: Login into Account
+      parameters:
+      - description: Account data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.LoginAPI'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Account data
+          schema:
+            $ref: '#/definitions/model.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/lib.Response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/lib.Response'
+      security:
+      - TokenKey: []
+      summary: Login into Account
+      tags:
+      - Account
+  /accounts/register:
+    post:
+      consumes:
+      - application/json
+      description: Register new Account
+      parameters:
+      - description: Account data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.RegistrationAPI'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/lib.Response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/lib.Response'
+      security:
+      - TokenKey: []
+      summary: Register new Account
+      tags:
+      - Account
+  /carts:
+    get:
+      consumes:
+      - application/json
+      description: List of Cart
+      parameters:
+      - description: Page number start from zero
+        in: query
+        name: page
+        type: integer
+      - description: Size per page, default `0`
+        in: query
+        name: size
+        type: integer
+      - description: Sort by field, adding dash (`-`) at the beginning means descending
+          and vice versa
+        in: query
+        name: sort
+        type: string
+      - description: Select specific fields with comma separated
+        in: query
+        name: fields
+        type: string
+      - description: custom filters, see [more details](https://github.com/morkid/paginate#filter-format)
+        in: query
+        name: filters
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of Cart
+          schema:
+            allOf:
+            - $ref: '#/definitions/lib.Page'
+            - properties:
+                items:
+                  items:
+                    $ref: '#/definitions/model.Cart'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/lib.Response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/lib.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: List of Cart
+      tags:
+      - Cart
+    post:
+      consumes:
+      - application/json
+      description: Create new Cart
+      parameters:
+      - description: Cart data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.CartPayload'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Cart data
+          schema:
+            $ref: '#/definitions/model.Cart'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/lib.Response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/lib.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Create new Cart
+      tags:
+      - Cart
+  /carts/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Cart by id
+      parameters:
+      - description: Cart ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/lib.Response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/lib.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Cart by id
+      tags:
+      - Cart
+    get:
+      consumes:
+      - application/json
+      description: Get a Cart by id
+      parameters:
+      - description: Cart ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Cart data
+          schema:
+            $ref: '#/definitions/model.Cart'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/lib.Response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/lib.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Get a Cart by id
+      tags:
+      - Cart
+    put:
+      consumes:
+      - application/json
+      description: Update Cart by id
+      parameters:
+      - description: Cart ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Cart data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.CartAPI'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Cart data
+          schema:
+            $ref: '#/definitions/model.Cart'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/lib.Response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/lib.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Update Cart by id
+      tags:
+      - Cart
+  /info.json:
+    get:
+      consumes:
+      - application/json
+      description: show info response
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: bad request
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "404":
+          description: not found
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "409":
+          description: conflict
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/lib.Response'
+      summary: show info response
+      tags:
+      - API
+  /show-schedules:
+    get:
+      consumes:
+      - application/json
+      description: List of Show Schedule
+      parameters:
+      - description: Page number start from zero
+        in: query
+        name: page
+        type: integer
+      - description: Size per page, default `0`
+        in: query
+        name: size
+        type: integer
+      - description: Sort by field, adding dash (`-`) at the beginning means descending
+          and vice versa
+        in: query
+        name: sort
+        type: string
+      - description: Select specific fields with comma separated
+        in: query
+        name: fields
+        type: string
+      - description: custom filters, see [more details](https://github.com/morkid/paginate#filter-format)
+        in: query
+        name: filters
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of Show Schedule
+          schema:
+            allOf:
+            - $ref: '#/definitions/lib.Page'
+            - properties:
+                items:
+                  items:
+                    $ref: '#/definitions/model.ShowSchedule'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/lib.Response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/lib.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: List of Show Schedule
+      tags:
+      - ShowSchedule
+    post:
+      consumes:
+      - application/json
+      description: Create new Show Schedule
+      parameters:
+      - description: Show Schedule data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.ShowScheduleAPI'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Show Schedule data
+          schema:
+            $ref: '#/definitions/model.ShowSchedule'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/lib.Response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/lib.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Create new Show Schedule
+      tags:
+      - ShowSchedule
+  /show-schedules/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Show Schedule by id
+      parameters:
+      - description: Show Schedule ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/lib.Response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/lib.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Show Schedule by id
+      tags:
+      - ShowSchedule
+    get:
+      consumes:
+      - application/json
+      description: Get a Show Schedule by id
+      parameters:
+      - description: Show Schedule ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Show Schedule data
+          schema:
+            $ref: '#/definitions/model.ShowSchedule'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/lib.Response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/lib.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Get a Show Schedule by id
+      tags:
+      - ShowSchedule
+    put:
+      consumes:
+      - application/json
+      description: Update Show Schedule by id
+      parameters:
+      - description: Show Schedule ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Show Schedule data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.ShowScheduleAPI'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Show Schedule data
+          schema:
+            $ref: '#/definitions/model.ShowSchedule'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/lib.Response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/lib.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Update Show Schedule by id
+      tags:
+      - ShowSchedule
+  /transactions:
+    get:
+      consumes:
+      - application/json
+      description: List of Transaction
+      parameters:
+      - description: Page number start from zero
+        in: query
+        name: page
+        type: integer
+      - description: Size per page, default `0`
+        in: query
+        name: size
+        type: integer
+      - description: Sort by field, adding dash (`-`) at the beginning means descending
+          and vice versa
+        in: query
+        name: sort
+        type: string
+      - description: Select specific fields with comma separated
+        in: query
+        name: fields
+        type: string
+      - description: custom filters, see [more details](https://github.com/morkid/paginate#filter-format)
+        in: query
+        name: filters
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of Transaction
+          schema:
+            allOf:
+            - $ref: '#/definitions/lib.Page'
+            - properties:
+                items:
+                  items:
+                    $ref: '#/definitions/model.Transaction'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/lib.Response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/lib.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: List of Transaction
+      tags:
+      - Transaction
+  /transactions/{cart_id}:
+    post:
+      consumes:
+      - application/json
+      description: Post new Transaction
+      parameters:
+      - description: Cart ID
+        in: path
+        name: cart_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Transaction data
+          schema:
+            $ref: '#/definitions/model.Transaction'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/lib.Response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/lib.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Post new Transaction
+      tags:
+      - Transaction
+  /transactions/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get a Transaction by id
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Transaction data
+          schema:
+            $ref: '#/definitions/model.Transaction'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/lib.Response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/lib.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Get a Transaction by id
+      tags:
+      - Transaction
+  /transactions/{id}/cancel:
+    post:
+      consumes:
+      - application/json
+      description: Cancel Unpaid Transaction
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Transaction data
+          schema:
+            $ref: '#/definitions/model.Transaction'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/lib.Response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/lib.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Cancel Unpaid Transaction
+      tags:
+      - Transaction
+  /transactions/{id}/payment:
+    post:
+      consumes:
+      - application/json
+      description: Pay Transaction
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Payment data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.TransactionPaymentAPI'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Transaction data
+          schema:
+            $ref: '#/definitions/model.TransactionPayment'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/lib.Response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/lib.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Pay Transaction
+      tags:
+      - Transaction
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: List of User
+      parameters:
+      - description: Page number start from zero
+        in: query
+        name: page
+        type: integer
+      - description: Size per page, default `0`
+        in: query
+        name: size
+        type: integer
+      - description: Sort by field, adding dash (`-`) at the beginning means descending
+          and vice versa
+        in: query
+        name: sort
+        type: string
+      - description: Select specific fields with comma separated
+        in: query
+        name: fields
+        type: string
+      - description: custom filters, see [more details](https://github.com/morkid/paginate#filter-format)
+        in: query
+        name: filters
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of User
+          schema:
+            allOf:
+            - $ref: '#/definitions/lib.Page'
+            - properties:
+                items:
+                  items:
+                    $ref: '#/definitions/model.User'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/lib.Response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/lib.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: List of User
+      tags:
+      - User
+    post:
+      consumes:
+      - application/json
+      description: Create new User
+      parameters:
+      - description: User data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserAPI'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: User data
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/lib.Response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/lib.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Create new User
+      tags:
+      - User
+  /users/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get a User by id
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User data
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/lib.Response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/lib.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Get a User by id
+      tags:
+      - User
+    put:
+      consumes:
+      - application/json
+      description: Update User by id
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: User data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserAPI'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User data
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/lib.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/lib.Response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/lib.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Update User by id
+      tags:
+      - User
+schemes:
+- http
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+  TokenKey:
+    in: header
+    name: x-Token
+    type: apiKey
+swagger: "2.0"
