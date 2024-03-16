@@ -58,10 +58,6 @@ definitions:
         type: integer
       seat_ids:
         type: string
-      seats:
-        items:
-          $ref: '#/definitions/model.Seat'
-        type: array
       show_schedule:
         $ref: '#/definitions/model.ShowSchedule'
       show_schedule_id:
@@ -227,9 +223,26 @@ definitions:
         type: boolean
       row:
         type: string
+      seat_layout:
+        $ref: '#/definitions/model.SeatLayout'
       seat_layout_id:
         type: string
+      show_schedule:
+        $ref: '#/definitions/model.ShowSchedule'
       show_schedule_id:
+        type: string
+    type: object
+  model.SeatLayout:
+    properties:
+      additional:
+        type: string
+      characteristic:
+        type: string
+      code:
+        type: string
+      column:
+        type: string
+      row:
         type: string
     type: object
   model.ShowSchedule:
@@ -250,13 +263,17 @@ definitions:
       movie_id:
         type: string
       price:
-        type: number
+        items:
+          $ref: '#/definitions/model.Seat'
+        type: array
       start_time:
         format: date-time
         type: string
       theater:
         $ref: '#/definitions/model.Theater'
       theater_id:
+        type: string
+      unique_code:
         type: string
     type: object
   model.ShowScheduleAPI:
@@ -276,6 +293,8 @@ definitions:
         format: date-time
         type: string
       theater_id:
+        type: string
+      unique_code:
         type: string
     type: object
   model.Theater:

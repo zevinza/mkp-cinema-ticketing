@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 // Cart Cart
@@ -13,7 +14,7 @@ type Cart struct {
 	DataOwner
 	CartAPI
 	ShowSchedule *ShowSchedule `json:"show_schedule,omitempty" gorm:"foreignKey:ID;references:ShowScheduleID"`
-	Seats        *[]Seat       `json:"seats,omitempty"`
+	Seats        *[]Seat       `json:"seats,omitempty" gorm:"-"`
 }
 
 // CartAPI Cart API
@@ -25,6 +26,16 @@ type CartAPI struct {
 	Quantity       *int       `json:"quantity,omitempty"`
 	TotalPrice     *float64   `json:"total_price,omitempty"`
 	ExpiresIn      *int64     `json:"expires_in,omitempty"`
+}
+
+func (b *Cart) AfterFind(tx *gorm.DB) error {
+	ids := b.GetSeat()
+	seats := []Seat{}
+	if len(ids) > 0 {
+		tx.Where(`id IN ?`, ids).Find(&seats)
+		b.Seats = &seats
+	}
+	return nil
 }
 
 type CartPayload struct {

@@ -1,7 +1,7 @@
 
-# Simple Online Shop 
+# MKP Cinema Ticketing 
 
-This Project is created to make a RESTful API for online shop application
+This Project is created to make a RESTful API for Online Order Cinema Ticketing 
 written with go programming language and go-fiber framework.
 
 before running this application, make sure you have these Prequisites: 

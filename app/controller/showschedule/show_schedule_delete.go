@@ -6,6 +6,7 @@ import (
 	"api/app/services"
 
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 )
 
 // DeleteShowSchedule godoc
@@ -29,14 +30,29 @@ func DeleteShowSchedule(c *fiber.Ctx) error {
 	}
 
 	db := services.DB.WithContext(c.UserContext())
+	id := c.Params("id")
 
 	var data model.ShowSchedule
-	result := db.Model(&data).Where("id = ?", c.Params("id")).Take(&data)
+	result := db.Model(&data).Where("id = ?", id).Take(&data)
 	if result.RowsAffected < 1 {
 		return lib.ErrorNotFound(c)
 	}
 
-	db.Delete(&data)
+	err := db.Transaction(func(tx *gorm.DB) error {
+		if err := db.Delete(&data).Error; err != nil {
+			return err
+		}
+
+		if err := db.Where(`show_schedule_id = ?`, id).Unscoped().Delete(&model.Seat{}).Error; err != nil {
+			return err
+		}
+
+		return nil
+
+	})
+	if err != nil {
+		return lib.ErrorConflict(c, err)
+	}
 
 	return lib.OK(c)
 }

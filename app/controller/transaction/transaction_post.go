@@ -33,7 +33,7 @@ func PostTransaction(c *fiber.Ctx) error {
 	trxID := lib.GenUUID()
 	userID := lib.GetXUserID(c)
 
-	if _, err := rdb.Get(context.Background(), "cart_"+id).Result(); err != nil {
+	if val, _ := rdb.Get(context.Background(), "cart_"+id).Result(); len(val) == 0 {
 		return lib.ErrorHTTP(c, 410, "your session is expired")
 	}
 
@@ -67,11 +67,11 @@ func PostTransaction(c *fiber.Ctx) error {
 		},
 		TransactionAPI: model.TransactionAPI{
 			UserID:            userID,
+			CartID:            &id,
 			TransactionStatus: lib.Strptr("Unpaid"),
 			TotalTicketPrice:  cart.TotalPrice,
 			TotalDiscount:     lib.Float64ptr(0),
 			TotalFee:          lib.Float64ptr(float64(viper.GetInt("ADMIN_FEE"))),
-			TotalPaid:         lib.Float64ptr(0),
 			ContactName:       user.FirstName,
 			ContactDetail:     user.PhoneNumber,
 		},
@@ -91,6 +91,7 @@ func PostTransaction(c *fiber.Ctx) error {
 					TransactionID:  transaction.ID,
 					ShowScheduleID: cart.ShowScheduleID,
 					IsPrinted:      lib.Boolptr(false),
+					IsActivated:    lib.Boolptr(false),
 					SeatCode:       seat.Code,
 					MovieName:      show.Movie.Name,
 					LocationName:   show.CinemaLocation.Name,

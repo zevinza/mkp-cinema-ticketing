@@ -49,13 +49,12 @@ func Handle(app *fiber.App) {
 	cartAPI.Use(middleware.Oauth2Authentication)
 	cartAPI.Post("/", cart.PostCart)
 	cartAPI.Get("/", cart.GetCart)
-	cartAPI.Put("/:id", cart.PutCart)
 	cartAPI.Get("/:id", cart.GetCartID)
 	cartAPI.Delete("/:id", cart.DeleteCart)
 
 	// Show Schedule
 	showscheduleAPI := api.Group("/show-schedules")
-	showscheduleAPI.Use(middleware.TokenValidator())
+	showscheduleAPI.Use(middleware.Oauth2Authentication)
 	showscheduleAPI.Post("/", showschedule.PostShowSchedule)
 	showscheduleAPI.Get("/", showschedule.GetShowSchedule)
 	showscheduleAPI.Put("/:id", showschedule.PutShowSchedule)
@@ -65,7 +64,7 @@ func Handle(app *fiber.App) {
 	// transaction
 	transactionAPI := api.Group("/transactions")
 	transactionAPI.Use(middleware.Oauth2Authentication)
-	transactionAPI.Post("/", transaction.PostTransaction)
+	transactionAPI.Post("/:cart_id", transaction.PostTransaction)
 	transactionAPI.Get("/", transaction.GetTransaction)
 	transactionAPI.Get("/:id", transaction.GetTransactionID)
 	transactionAPI.Post("/:id/payment", transaction.PostTransactionPayment)

@@ -8,6 +8,7 @@ var (
 	refCount   model.ReferenceCount
 	seatLayout model.SeatLayout
 	show       model.ShowSchedule
+	theater    model.Theater
 	user       model.User
 )
 
@@ -19,6 +20,7 @@ func DataSeeds() []interface{} {
 		refCount.Seed(),
 		seatLayout.Seed(),
 		show.Seed(),
+		theater.Seed(),
 		user.Seed(),
 	}
 }

@@ -1801,12 +1801,6 @@
                 "seat_ids": {
                     "type": "string"
                 },
-                "seats": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Seat"
-                    }
-                },
                 "show_schedule": {
                     "$ref": "#/definitions/model.ShowSchedule"
                 },
@@ -2045,10 +2039,36 @@
                 "row": {
                     "type": "string"
                 },
+                "seat_layout": {
+                    "$ref": "#/definitions/model.SeatLayout"
+                },
                 "seat_layout_id": {
                     "type": "string"
                 },
+                "show_schedule": {
+                    "$ref": "#/definitions/model.ShowSchedule"
+                },
                 "show_schedule_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.SeatLayout": {
+            "type": "object",
+            "properties": {
+                "additional": {
+                    "type": "string"
+                },
+                "characteristic": {
+                    "type": "string"
+                },
+                "code": {
+                    "type": "string"
+                },
+                "column": {
+                    "type": "string"
+                },
+                "row": {
                     "type": "string"
                 }
             }
@@ -2079,7 +2099,10 @@
                     "type": "string"
                 },
                 "price": {
-                    "type": "number"
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Seat"
+                    }
                 },
                 "start_time": {
                     "type": "string",
@@ -2089,6 +2112,9 @@
                     "$ref": "#/definitions/model.Theater"
                 },
                 "theater_id": {
+                    "type": "string"
+                },
+                "unique_code": {
                     "type": "string"
                 }
             }
@@ -2117,6 +2143,9 @@
                     "format": "date-time"
                 },
                 "theater_id": {
+                    "type": "string"
+                },
+                "unique_code": {
                     "type": "string"
                 }
             }

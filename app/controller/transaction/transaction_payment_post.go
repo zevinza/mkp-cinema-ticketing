@@ -4,8 +4,10 @@ import (
 	"api/app/lib"
 	"api/app/model"
 	"api/app/services"
+	"context"
 
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 )
 
 // PostTransactionPayment godoc
@@ -26,7 +28,9 @@ import (
 // @Tags Transaction
 func PostTransactionPayment(c *fiber.Ctx) error {
 	db := services.DB.WithContext(c.UserContext())
+	rdb := services.REDIS
 	id := lib.StringToUUID(c.Params("id"))
+	userID := lib.GetXUserID(c)
 
 	api := new(model.TransactionPaymentAPI)
 	if err := lib.BodyParser(c, api); nil != err {
@@ -39,27 +43,56 @@ func PostTransactionPayment(c *fiber.Ctx) error {
 		return lib.ErrorNotAllowed(c)
 	}
 
+	if val, _ := rdb.Get(context.Background(), "cart_"+lib.RevStr(trx.CartID)).Result(); len(val) == 0 {
+		return lib.ErrorHTTP(c, 410, "your session is expired")
+
+		// do Refund if user is paid several amount
+	}
+
 	var data model.TransactionPayment
 	lib.Merge(api, &data)
 	data.TransactionID = id
 	if data.PaidAt == nil {
 		data.PaidAt = lib.StrfmtNow()
 	}
-	if data.ReferenceNo == nil {
-		data.ReferenceNo = model.GenRefCount("Payment", db)
-	}
+	data.CreatorID = userID
 
-	if err := db.Create(&data).Error; err != nil {
-		return lib.ErrorConflict(c, err)
-	}
-
-	amount := float64(0)
-	db.Model(&model.TransactionPayment{}).Select(`sum(paid_amount) as amount`).Where(`transaction_id = ?`, id).Find(&amount)
-
-	if amount >= lib.RevFloat64(trx.TotalPrice) {
+	if lib.RevFloat64(api.PaidAmount) >= lib.RevFloat64(trx.TotalPrice) {
 		trx.TransactionStatus = lib.Strptr("paid")
+		trx.BookingCode = lib.Strptr(lib.RandomNumber(5))
+
+		err := db.Transaction(func(tx *gorm.DB) error {
+			if err := tx.Create(&data).Error; err != nil {
+				return err
+			}
+
+			if err := tx.Model(&model.Ticket{}).Where(`transaction_id = ?`, id).UpdateColumn("is_activated", "true").Error; err != nil {
+				return err
+			}
+
+			cart := model.Cart{}
+			tx.Where(`id = ?`, trx.CartID).Take(&cart)
+			seatIDs := cart.GetSeat()
+			for _, id := range seatIDs {
+				rdb.Del(context.Background(), "seat_"+id.String())
+			}
+
+			rdb.Del(context.Background(), "cart_"+lib.RevStr(trx.CartID))
+
+			if err := tx.Where(`id = ?`, trx.CartID).Unscoped().Delete(&model.Cart{}).Error; err != nil {
+				return err
+			}
+
+			if err := tx.Model(&model.Seat{}).Where(`id IN ?`, seatIDs).UpdateColumn("is_available", "false").Error; err != nil {
+				return err
+			}
+
+			return nil
+		})
+		if err != nil {
+			return lib.ErrorConflict(c, err)
+		}
 	}
-	trx.TotalPaid = lib.Float64ptr(amount)
 
 	db.Updates(&trx)
 	data.Transaction = &trx

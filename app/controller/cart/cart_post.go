@@ -38,7 +38,6 @@ func PostCart(c *fiber.Ctx) error {
 
 	db := services.DB.WithContext(c.UserContext())
 	rdb := services.REDIS
-	ctx := context.Background()
 
 	duration := time.Duration(time.Second * time.Duration(int64(viper.GetInt("CART_DURATION"))))
 
@@ -50,30 +49,35 @@ func PostCart(c *fiber.Ctx) error {
 	if count > 0 {
 		return lib.ErrorBadRequest(c, "please proceed your previous order")
 	}
+
 	for _, id := range api.SeatIDs {
 		key := "seat_" + id.String()
-		if _, err := rdb.Get(ctx, key).Result(); err != nil {
+		if val, _ := rdb.Get(context.Background(), key).Result(); len(val) > 0 {
 			return lib.ErrorBadRequest(c, "your seat is taken, please choose another")
 		}
 
-		rdb.Set(ctx, key, cartID.String, duration)
+		rdb.Set(context.Background(), key, "ok", duration)
 	}
-	go InsertCart(api, userID, cartID, db)
+	db.Model(&model.Seat{}).Where(`id IN ?`, api.SeatIDs).Count(&count)
+	if int(count) != len(api.SeatIDs) {
+		return lib.ErrorBadRequest(c, "your seat is taken, please choose another")
+	}
+	go InsertCart(api, userID, cartID, duration, db)
 	go db.Model(&model.Seat{}).Where(`id IN ?`, api.SeatIDs).UpdateColumn("is_available", "false")
 
-	rdb.Set(ctx, "cart_"+cartID.String(), "ok", duration)
-	rdb.Set(ctx, "cart_scheduler", "on", 0)
-	log.Println("-----seat scheduler = on-----")
+	rdb.Set(context.Background(), "cart_"+cartID.String(), userID.String(), duration)
+	rdb.Set(context.Background(), "cart_scheduler", "on", 0)
+	log.Println("----- seat scheduler : on -----")
 
 	return lib.OK(c, cartID)
 }
 
-func InsertCart(api *model.CartPayload, userID, cartID *uuid.UUID, db *gorm.DB) {
+func InsertCart(api *model.CartPayload, userID, cartID *uuid.UUID, duration time.Duration, db *gorm.DB) {
 	var ids string
 	for _, id := range api.SeatIDs {
 		ids = ids + ", " + id.String()
 	}
-	ids = strings.TrimRight(ids, ", ")
+	ids = strings.TrimLeft(ids, ", ")
 
 	show := model.ShowSchedule{}
 	row := db.Where(`id = ?`, api.ShowScheduleID).Take(&show)
@@ -94,6 +98,7 @@ func InsertCart(api *model.CartPayload, userID, cartID *uuid.UUID, db *gorm.DB) 
 			Price:          show.Price,
 			Quantity:       &qty,
 			TotalPrice:     &total,
+			ExpiresIn:      lib.Int64ptr(time.Now().Add(duration).Unix()),
 		},
 	})
 }

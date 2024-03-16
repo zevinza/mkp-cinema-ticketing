@@ -16,7 +16,7 @@ type ShowSchedule struct {
 	Movie          *Movie          `json:"movie,omitempty" gorm:"foreignKey:ID;references:MovieID"`
 	CinemaLocation *CinemaLocation `json:"cinema_location,omitempty" gorm:"foreignKey:ID;references:CinemaLocationID"`
 	Theater        *Theater        `json:"theater,omitempty" gorm:"foreignKey:ID;references:TheaterID"`
-	Seats          *[]Seat         `json:"price,omitempty" gorm:"foreignKey:ShowScheduleID;references:ID"`
+	Seats          *[]Seat         `json:"seats,omitempty" gorm:"foreignKey:ShowScheduleID;references:ID"`
 }
 
 type ShowScheduleAPI struct {
@@ -31,12 +31,16 @@ type ShowScheduleAPI struct {
 }
 
 func (b *ShowSchedule) BeforeCreate(tx *gorm.DB) error {
-	layouts := []SeatLayout{}
-	tx.Find(&layouts)
-	b.ID = lib.GenUUID()
 	if b.UniqueCode == nil {
 		b.UniqueCode = lib.Strptr(lib.RandomChars(20))
 	}
+
+	return b.Base.BeforeCreate(tx)
+}
+
+func (b *ShowSchedule) AfterCreate(tx *gorm.DB) error {
+	layouts := []SeatLayout{}
+	tx.Find(&layouts)
 
 	seats := []Seat{}
 	for _, layout := range layouts {
@@ -55,7 +59,7 @@ func (b *ShowSchedule) BeforeCreate(tx *gorm.DB) error {
 	if err := tx.CreateInBatches(&seats, 100).Error; err != nil {
 		return err
 	}
-	return b.Base.BeforeCreate(tx)
+	return nil
 }
 
 func (b *ShowSchedule) Seed() *[]ShowSchedule {

@@ -80,6 +80,18 @@ func (s *User) Seed() *[]User {
 				LastLogin:   now(),
 			},
 		},
+		{
+			UserAPI: UserAPI{
+				FirstName:   strptr("John"),
+				LastName:    strptr("doe"),
+				Username:    strptr("john_doe"),
+				Email:       strptr("johndoe@mail.com"),
+				PhoneNumber: strptr("089678009500"),
+				IsAdmin:     boolInt(0),
+				Password:    strptr("$2a$10$8katy8Li/HTJ.LljINi3oOrEIrvL.iscnzjnqskWONkJlyPxLq9W."),
+				LastLogin:   now(),
+			},
+		},
 	}
 
 	return &u

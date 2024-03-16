@@ -2,6 +2,7 @@ package lib
 
 import (
 	"fmt"
+	"log"
 	"testing"
 
 	"github.com/gofiber/fiber/v2/utils"
@@ -37,7 +38,8 @@ func TestGeneratePassword(t *testing.T) {
 }
 
 func TestRandomChars(t *testing.T) {
-	utils.AssertEqual(t, 10, len(RandomChars(10)))
+	log.Println(RandomChars(20))
+	utils.AssertEqual(t, 20, len(RandomChars(20)))
 }
 
 func TestHashPassword(t *testing.T) {
