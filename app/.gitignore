@@ -13,5 +13,5 @@
 !/model/
 !/routes/
 !/services/
-!/sync/
+!/scheduler/
 !/.gitignore
